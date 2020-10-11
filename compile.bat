@@ -10,7 +10,7 @@ mkdir build
 
 REM Build
 echo compiling...
-g++ *.cpp -o build/out.exe || goto error
+g++ source/*.cpp -o build/out.exe || goto error
 echo program successfully compiled, executing now...
 
 REM execute program

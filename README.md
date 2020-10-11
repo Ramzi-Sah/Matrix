@@ -1,4 +1,4 @@
-### matrix manipulation class
+# matrix manipulation class
 a simple C++ matrix manipulation class
 
 ## how to use

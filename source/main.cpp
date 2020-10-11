@@ -5,7 +5,6 @@ const unsigned int MAT_SIZE_X = 3;
 
 int main() {
     //-------------------------------------------------
-	std::cout << "----------------------------------" << std::endl;
     // mat 1
     Matrix A(MAT_SIZE_Y, MAT_SIZE_X);
 

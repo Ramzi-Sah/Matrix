@@ -1,12 +1,9 @@
 #include "Matrix.hpp"
 
-const unsigned int MAT_SIZE_Y = 2;
-const unsigned int MAT_SIZE_X = 3;
-
 int main() {
     //-------------------------------------------------
     // mat 1
-    Matrix A(MAT_SIZE_Y, MAT_SIZE_X);
+    Matrix A(2, 3);
 
     A.setVal(0, 0, 1.0f);
     A.setVal(0, 1, 2.0f);
@@ -47,4 +44,4 @@ int main() {
 
 
     return 0;
-}
+};

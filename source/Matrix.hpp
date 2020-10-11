@@ -13,7 +13,7 @@ private:
 
 public:
     Matrix(const Matrix &mat); // copy constructor
-    Matrix& operator=(const Matrix &mat);
+    Matrix& operator=(const Matrix &mat); // = operator
 
     Matrix(unsigned int _sizeY, unsigned int _sizeX);
     Matrix(unsigned int _sizeY, unsigned int _sizeX, float val);

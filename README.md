@@ -48,3 +48,8 @@ you can convert a matrix to a string like this
 std::string matrix = matrix_B.toStr();
 std::cout << matrix << std::endl;
 ```
+
+you can calculate a matrix's determinant like this
+```c++
+float determinant = matrix_B.getDeterminant();
+```

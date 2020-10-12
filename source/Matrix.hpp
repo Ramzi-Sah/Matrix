@@ -33,6 +33,9 @@ public:
     // transpose
     Matrix getTranspose();
 
+    // determinant
+    float getDeterminant();
+
     // addition
     Matrix add(Matrix mat);
 

@@ -126,6 +126,48 @@ Matrix Matrix::getTranspose() {
     return temp;
 };
 
+// determinant
+float Matrix::getDeterminant() {
+    float determinant = 0.0f;
+
+    // size verification
+    if (size_x != size_y) {
+        std::cout << "Error: tried to calculate a " << size_y << "x" << size_x << " matrx's determinant" << std::endl;
+        return determinant;
+    };
+
+    // if it is a 1x1 matrix return value
+    if (size_y == 1) // size_y == size_x no need to check size_x
+        return values[0][0];
+
+    // calculate matrix determinant
+    for (unsigned int j = 0; j < size_x; j++) {
+
+        Matrix temp(size_y-1, size_x-1);
+        bool flag = false;
+        for (unsigned int l = 0; l < temp.getSizeX(); l++) {
+            for (unsigned int k = 0; k < temp.getSizeY(); k++) {
+                if (flag) {
+                    temp.setVal(k, l, values[k + 1][l + 1]);
+                } else if (j != l) {
+                    temp.setVal(k, l, values[k + 1][l]);
+                } else {
+                    flag = true;
+                    temp.setVal(k, l, values[k + 1][l + 1]);
+                };
+            };
+        };
+
+        if (j % 2 == 0) {
+            determinant += values[0][j] * temp.getDeterminant();
+        } else {
+            determinant -= values[0][j] * temp.getDeterminant();
+        };
+    };
+
+    return determinant;
+};
+
 //---------------------------------------------
 // addition
 Matrix Matrix::add(Matrix mat) {
@@ -136,7 +178,6 @@ Matrix Matrix::add(Matrix mat) {
     if (size_x != mat.getSizeX() || size_y != mat.getSizeY()) {
         std::cout << "Error: tried to add a " << size_y << "x" << size_x <<
         " matrx to a " << mat.getSizeY() << "x" << mat.getSizeX() << " matrix" << std::endl;
-
         return temp;
     };
 
@@ -170,7 +211,6 @@ Matrix Matrix::multiplyBy(Matrix mat) {
     if (size_x != mat.getSizeY() || size_y != mat.getSizeX()) {
         std::cout << "Error: tried to multiply a " << size_y << "x" << size_x <<
         " matrx by a " << mat.getSizeY() << "x" << mat.getSizeX() << " matrix" << std::endl;
-
         return temp;
     };
 

@@ -2,6 +2,7 @@
 a simple C++ matrix manipulation class
 
 ## how to use
+### Matrix declaration
 ```c++
 Matrix matrix_A = Matrix(3, 2, 1.0f);
 ```
@@ -22,25 +23,42 @@ matrix_B.setVal(1, 1, 5.0f);
 matrix_B.setVal(1, 2, 6.0f);
 ```
 
+and you can access its values with the getVal(index_j, index_i) method like this
+```c++
+matrix_B.getVal(0, 2); // this will return 3.0f
+```
+
+you can access a matrix's size with these two methods getSizeX / getSizeY like this
+```c++
+unsigned int matrix_B_sizeX = matrix_B.getSizeX(); // get number of rows
+unsigned int matrix_B_sizeY = matrix_B.getSizeY(); // get number of columns
+```
+
+### Matrix multiplication
 you can multiply a matrix by a value like this
 ```c++
 matrix_B = matrix_B.multiplyBy(5.0f);
 ```
 
-you can multiply two matrices by a value like this
+or simply by doing this
+```c++
+matrix_B = matrix_B * 5.0f;
+```
+
+you can multiply two matrices by doing this
 ```c++
 matrix_B = matrix_B.multiplyBy(matrix_A);
 ```
 
+and this also works
+```c++
+matrix_B = matrix_B.multiplyBy(matrix_A);
+```
+
+### usefull functions
 you can get a matrix's transpose like this
 ```c++
 matrix_B = matrix_B.getTranspose();
-```
-
-you can get a matrix's size with these two methods getSizeX/getSizeY like this
-```c++
-unsigned int matrix_B_sizeX = matrix_B.getSizeX();
-unsigned int matrix_B_sizeY = matrix_B.getSizeY();
 ```
 
 you can convert a matrix to a string like this

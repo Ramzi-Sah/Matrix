@@ -2,7 +2,6 @@
 #define SAH_MATRIX
 
 #include <stdlib.h>
-#include <string>
 #include <sstream>
 #include <iostream>
 

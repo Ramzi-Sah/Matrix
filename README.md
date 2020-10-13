@@ -53,7 +53,7 @@ Matrix C = A.multiplyBy(B);
 
 this also works:
 ```c++
-Matrix C = A.multiplyBy(B);
+Matrix C = A * B;
 ```
 
 ### Usefull functions
@@ -77,7 +77,7 @@ float determinant = C.getDeterminant();
 ```
 
 ### Predefined Matrices
-you can create a identity matrix with size x like this:
+you can create an identity matrix with size x like this:
 ```c++
 Matrix D = Matrix::identity(5); // this will create a 5 by 5 identity matrix
 ```

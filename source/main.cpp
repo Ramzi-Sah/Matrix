@@ -16,13 +16,13 @@ int main() {
     std::cout << A.toStr() << std::endl;
 
     // A * 5
-	A = A.multiplyBy(5.0f);
+    A = A.multiplyBy(5.0f);
 
     std::cout << "multiplying A by 5: " << std::endl;
     std::cout << A.toStr() << std::endl;
 
     //-------------------------------------------------
-	std::cout << "----------------------------------" << std::endl;
+    std::cout << "----------------------------------" << std::endl;
 
     // mat 2
     Matrix B(A.getSizeX(), A.getSizeY(), 1.0f);
@@ -31,7 +31,7 @@ int main() {
     std::cout << B.toStr() << std::endl;
 
     //-------------------------------------------------
-	std::cout << "----------------------------------" << std::endl;
+    std::cout << "----------------------------------" << std::endl;
 
     // A * B
     Matrix C = A.multiplyBy(B);
@@ -52,17 +52,17 @@ int main() {
     C.setVal(0, 0, 1.0f);
 
     std::cout << "C is a "<< C.getSizeY() << "x" << C.getSizeX() << " matrix."<< std::endl;
-	std::cout << C.toStr() << std::endl;
+    std::cout << C.toStr() << std::endl;
 
     // transpose C
     C = C.getTranspose() + C;
-	std::cout << "C' + C is a "<< C.getSizeY() << "x" << C.getSizeX() << " matrix."<< std::endl;
-	std::cout << C.toStr() << std::endl;
+    std::cout << "C' + C is a "<< C.getSizeY() << "x" << C.getSizeX() << " matrix."<< std::endl;
+    std::cout << C.toStr() << std::endl;
 
     // calculate determinant
-	float determinant = C.getDeterminant();
-	std::cout << "determinant(C) is: "<< std::endl;
-	std::cout << determinant << std::endl << std::endl;
+    float determinant = C.getDeterminant();
+    std::cout << "determinant(C) is: "<< std::endl;
+    std::cout << determinant << std::endl << std::endl;
 
     C = C * determinant;
     std::cout << "C x determinant(C) is: "<< std::endl;
@@ -77,14 +77,14 @@ int main() {
     std::cout << "D is a "<< D.getSizeY() << "x" << D.getSizeX() << " matrix."<< std::endl;
     std::cout << D.toStr() << std::endl;
 
-/*
+    /*
     try {
         C.setVal(44554,64546456, 50);
         std::cout << C.getVal(44554,64546456) << std::endl;
     } catch (int e) {
         std::cout << "flag" << '\n';
     }
-*/
+    */
 
     return 0;
 };

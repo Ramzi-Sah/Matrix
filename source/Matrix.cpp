@@ -77,7 +77,7 @@ Matrix::~Matrix() {
     dispose();
 };
 void Matrix::dispose() {
-	// delete allocated memory
+    // delete allocated memory
     for (unsigned int k = 0; k < size_y; k++)
         free(values[k]);
 
@@ -152,7 +152,7 @@ std::string Matrix::toStr() {
 Matrix Matrix::getTranspose() {
     Matrix temp = Matrix(size_x, size_y);
 
-	// transpose the matrix
+    // transpose the matrix
     for (unsigned int j = 0; j < size_y; j++)
         for (unsigned int i = 0; i < size_x; i++)
             temp.setVal(i, j, values[j][i]);
@@ -206,14 +206,14 @@ Matrix Matrix::add(Matrix mat) {
     // init temp matrix
     Matrix temp(size_y, size_x, 0.0f);
 
-	// size verification
+    // size verification
     if (size_x != mat.getSizeX() || size_y != mat.getSizeY()) {
         std::cerr << "Error: tried to add a " << size_y << "x" << size_x <<
         " matrx to a " << mat.getSizeY() << "x" << mat.getSizeX() << " matrix" << std::endl;
         return temp;
     };
 
-	// do the addition
+    // do the addition
     for (unsigned int j = 0; j < size_y; j++)
         for (unsigned int i = 0; i < size_x; i++)
             temp.setVal(j, i, values[j][i] + mat.getVal(j, i));

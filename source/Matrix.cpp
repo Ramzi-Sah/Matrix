@@ -3,6 +3,7 @@
 Matrix::Matrix(const Matrix &mat) {
     //std::cout << "copy constructor" << std::endl;
 
+    // set matrix size
     size_x = mat.size_x;
     size_y = mat.size_y;
 
@@ -17,10 +18,10 @@ Matrix::Matrix(const Matrix &mat) {
         for (unsigned int i = 0; i < size_x; i++)
             values[j][i] = mat.values[j][i];
 };
-
 Matrix& Matrix::operator=(const Matrix &mat) {
     //std::cout << "= operator" << std::endl;
 
+    // set matrix size
     size_x = mat.size_x;
     size_y = mat.size_y;
 
@@ -39,8 +40,12 @@ Matrix& Matrix::operator=(const Matrix &mat) {
 };
 
 Matrix::Matrix(unsigned int _sizeY, unsigned int _sizeX) {
+    // set matrix size
     size_x = _sizeX;
     size_y = _sizeY;
+
+    if (size_x == 0) size_x = 1;
+    if (size_y == 0) size_y = 1;
 
     // dynamically allocate matrix memory
     values = (float**) malloc(sizeof(float*) * size_x * size_y);
@@ -48,10 +53,13 @@ Matrix::Matrix(unsigned int _sizeY, unsigned int _sizeX) {
     for (unsigned int j = 0; j < size_y; j++)
         values[j] = (float*) malloc(sizeof(float) * size_x);
 };
-
 Matrix::Matrix(unsigned int _sizeY, unsigned int _sizeX, float val) {
+    // set matrix size
     size_x = _sizeX;
     size_y = _sizeY;
+
+    if (size_x == 0) size_x = 1;
+    if (size_y == 0) size_y = 1;
 
     // dynamically allocate matrix memory
     values = (float**) malloc(sizeof(float*) * size_x * size_y);
@@ -68,7 +76,6 @@ Matrix::Matrix(unsigned int _sizeY, unsigned int _sizeX, float val) {
 Matrix::~Matrix() {
     dispose();
 };
-
 void Matrix::dispose() {
 	// delete allocated memory
     for (unsigned int k = 0; k < size_y; k++)
@@ -77,8 +84,58 @@ void Matrix::dispose() {
     free(values);
 };
 
-// convert matrix to string
+//---------------------------------------------
+// value setters and getters
+void Matrix::setVal(unsigned int index_y, unsigned int index_x, float val) {
+    if (index_x >= size_x || index_y >= size_y) {
+        std::cerr << "tried to set an invalid matrix value [" << index_y << "][" << index_x << "] to " << val << "." << std::endl;
+        return;
+    };
+
+    values[index_y][index_x] = val;
+};
+float Matrix::getVal(unsigned int index_y, unsigned int index_x) {
+    if (index_x >= size_x || index_y >= size_y) {
+        std::cerr << "tried to access invalid matrix value [" << index_y << "][" << index_x << "]."  << std::endl;
+        return 0.0f;
+    };
+
+    return values[index_y][index_x];
+};
+
+unsigned int Matrix::getSizeY() {
+    return size_y;
+};
+unsigned int Matrix::getSizeX() {
+    return size_x;
+};
+
+//---------------------------------------------
+// some predefined matrices
+Matrix Matrix::identity(unsigned int size) {
+    Matrix identity_mat(size, size);
+
+    // set values
+    unsigned int identity_index = 0;
+    for (unsigned int j = 0; j < size; j++) {
+        for (unsigned int i = 0; i < size; i++) {
+            if (j == identity_index && i == identity_index) {
+                identity_mat.setVal(j, i, 1.0f);
+            } else {
+                identity_mat.setVal(j, i, 0.0f);
+            };
+        };
+        identity_index++;
+    };
+
+    return identity_mat;
+};
+
+
+//---------------------------------------------
+// some usefull methods
 std::string Matrix::toStr() {
+    // convert matrix to string
     std::stringstream ss;
 
     for (unsigned int j = 0; j < size_y; j++) {
@@ -92,29 +149,6 @@ std::string Matrix::toStr() {
 
     return ss.str();
 };
-
-//---------------------------------------------
-// value setters and getters
-void Matrix::setVal(unsigned int index_y, unsigned int index_x, float val) {
-    if (!(index_x >= size_x || index_y >= size_y))
-        values[index_y][index_x] = val;
-};
-float Matrix::getVal(unsigned int index_y, unsigned int index_x) {
-    if (index_x >= size_x || index_y >= size_y)
-        return 0;
-
-    return values[index_y][index_x];
-};
-
-unsigned int Matrix::getSizeY() {
-    return size_y;
-};
-unsigned int Matrix::getSizeX() {
-    return size_x;
-};
-
-//---------------------------------------------
-// transpose
 Matrix Matrix::getTranspose() {
     Matrix temp = Matrix(size_x, size_y);
 
@@ -125,14 +159,12 @@ Matrix Matrix::getTranspose() {
 
     return temp;
 };
-
-// determinant
 float Matrix::getDeterminant() {
     float determinant = 0.0f;
 
     // size verification
     if (size_x != size_y) {
-        std::cout << "Error: tried to calculate a " << size_y << "x" << size_x << " matrx's determinant" << std::endl;
+        std::cerr << "tried to calculate a " << size_y << "x" << size_x << " matrx's determinant" << std::endl;
         return determinant;
     };
 
@@ -176,7 +208,7 @@ Matrix Matrix::add(Matrix mat) {
 
 	// size verification
     if (size_x != mat.getSizeX() || size_y != mat.getSizeY()) {
-        std::cout << "Error: tried to add a " << size_y << "x" << size_x <<
+        std::cerr << "Error: tried to add a " << size_y << "x" << size_x <<
         " matrx to a " << mat.getSizeY() << "x" << mat.getSizeX() << " matrix" << std::endl;
         return temp;
     };
@@ -187,6 +219,9 @@ Matrix Matrix::add(Matrix mat) {
             temp.setVal(j, i, values[j][i] + mat.getVal(j, i));
 
     return temp;
+};
+Matrix Matrix::operator+(const Matrix &mat) {
+    return add(mat);
 };
 
 //---------------------------------------------
@@ -202,6 +237,9 @@ Matrix Matrix::multiplyBy(float val) {
 
     return temp;
 };
+Matrix Matrix::operator*(const float &val) {
+    return multiplyBy(val);
+};
 
 Matrix Matrix::multiplyBy(Matrix mat) {
     // init temp matrix
@@ -209,7 +247,7 @@ Matrix Matrix::multiplyBy(Matrix mat) {
 
     // size verification
     if (size_x != mat.getSizeY() || size_y != mat.getSizeX()) {
-        std::cout << "Error: tried to multiply a " << size_y << "x" << size_x <<
+        std::cerr << "Error: tried to multiply a " << size_y << "x" << size_x <<
         " matrx by a " << mat.getSizeY() << "x" << mat.getSizeX() << " matrix" << std::endl;
         return temp;
     };
@@ -226,4 +264,7 @@ Matrix Matrix::multiplyBy(Matrix mat) {
     };
 
     return temp;
+};
+Matrix Matrix::operator*(const Matrix &mat) {
+    return multiplyBy(mat);
 };

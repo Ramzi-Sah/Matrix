@@ -47,22 +47,44 @@ int main() {
 
     for (unsigned int j = 0; j < C.getSizeY(); j++)
         for (unsigned int i = 0; i < C.getSizeX(); i++)
-            C.setVal(j, i, j * C.getSizeY() + i + i * j);
+            C.setVal(j, i, j * C.getSizeY() + i);
 
-    C.setVal(0, 0, 1);
+    C.setVal(0, 0, 1.0f);
 
     std::cout << "C is a "<< C.getSizeY() << "x" << C.getSizeX() << " matrix."<< std::endl;
 	std::cout << C.toStr() << std::endl;
 
     // transpose C
-    C = C.getTranspose();
-	std::cout << "C transpose is a "<< C.getSizeY() << "x" << C.getSizeX() << " matrix."<< std::endl;
+    C = C.getTranspose() + C;
+	std::cout << "C' + C is a "<< C.getSizeY() << "x" << C.getSizeX() << " matrix."<< std::endl;
 	std::cout << C.toStr() << std::endl;
 
     // calculate determinant
 	float determinant = C.getDeterminant();
-	std::cout << "C determinant is: "<< std::endl;
-	std::cout << determinant << std::endl;
+	std::cout << "determinant(C) is: "<< std::endl;
+	std::cout << determinant << std::endl << std::endl;
+
+    C = C * determinant;
+    std::cout << "C x determinant(C) is: "<< std::endl;
+    std::cout << C.toStr() << std::endl;
+
+    C = C * Matrix(C.getSizeX(), C.getSizeY(), 2.0f);
+    std::cout << "C x Matrix(2) is: "<< std::endl;
+    std::cout << C.toStr() << std::endl;
+
+    std::cout << "----------------------------------" << std::endl;
+    Matrix D = Matrix::identity(10);
+    std::cout << "D is a "<< D.getSizeY() << "x" << D.getSizeX() << " matrix."<< std::endl;
+    std::cout << D.toStr() << std::endl;
+
+/*
+    try {
+        C.setVal(44554,64546456, 50);
+        std::cout << C.getVal(44554,64546456) << std::endl;
+    } catch (int e) {
+        std::cout << "flag" << '\n';
+    }
+*/
 
     return 0;
 };

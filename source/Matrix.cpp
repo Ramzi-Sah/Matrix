@@ -1,44 +1,5 @@
 #include "Matrix.hpp"
 
-Matrix::Matrix(const Matrix &mat) {
-    //std::cout << "copy constructor" << std::endl;
-
-    // set matrix size
-    size_x = mat.size_x;
-    size_y = mat.size_y;
-
-    // dynamically allocate matrix memory
-    values = (float**) malloc(sizeof(float*) * size_x * size_y);
-
-    for (unsigned int k = 0; k < size_y; k++)
-        values[k] = (float*) malloc(sizeof(float) * size_x);
-
-    // set values
-    for (unsigned int j = 0; j < size_y; j++)
-        for (unsigned int i = 0; i < size_x; i++)
-            values[j][i] = mat.values[j][i];
-};
-Matrix& Matrix::operator=(const Matrix &mat) {
-    //std::cout << "= operator" << std::endl;
-
-    // set matrix size
-    size_x = mat.size_x;
-    size_y = mat.size_y;
-
-    // dynamically allocate matrix memory
-    values = (float**) malloc(sizeof(float*) * size_x * size_y);
-
-    for (unsigned int k = 0; k < size_y; k++)
-        values[k] = (float*) malloc(sizeof(float) * size_x);
-
-    // set values
-    for (unsigned int j = 0; j < size_y; j++)
-        for (unsigned int i = 0; i < size_x; i++)
-            values[j][i] = mat.values[j][i];
-
-    return *this;
-};
-
 Matrix::Matrix(unsigned int _sizeY, unsigned int _sizeX) {
     // set matrix size
     size_x = _sizeX;
@@ -82,6 +43,45 @@ void Matrix::dispose() {
         free(values[k]);
 
     free(values);
+};
+
+Matrix::Matrix(const Matrix &mat) {
+    //std::cout << "copy constructor" << std::endl;
+
+    // set matrix size
+    size_x = mat.size_x;
+    size_y = mat.size_y;
+
+    // dynamically allocate matrix memory
+    values = (float**) malloc(sizeof(float*) * size_x * size_y);
+
+    for (unsigned int k = 0; k < size_y; k++)
+        values[k] = (float*) malloc(sizeof(float) * size_x);
+
+    // set values
+    for (unsigned int j = 0; j < size_y; j++)
+        for (unsigned int i = 0; i < size_x; i++)
+            values[j][i] = mat.values[j][i];
+};
+Matrix& Matrix::operator=(const Matrix &mat) {
+    //std::cout << "= operator" << std::endl;
+
+    // set matrix size
+    size_x = mat.size_x;
+    size_y = mat.size_y;
+
+    // dynamically allocate matrix memory
+    values = (float**) malloc(sizeof(float*) * size_x * size_y);
+
+    for (unsigned int k = 0; k < size_y; k++)
+        values[k] = (float*) malloc(sizeof(float) * size_x);
+
+    // set values
+    for (unsigned int j = 0; j < size_y; j++)
+        for (unsigned int i = 0; i < size_x; i++)
+            values[j][i] = mat.values[j][i];
+
+    return *this;
 };
 
 //---------------------------------------------
@@ -164,7 +164,7 @@ float Matrix::getDeterminant() {
 
     // size verification
     if (size_x != size_y) {
-        std::cerr << "tried to calculate a " << size_y << "x" << size_x << " matrx's determinant" << std::endl;
+        std::cerr << "tried to calculate a " << size_y << "x" << size_x << " matrx's determinant." << std::endl;
         return determinant;
     };
 
@@ -178,14 +178,13 @@ float Matrix::getDeterminant() {
         Matrix temp(size_y-1, size_x-1);
         bool flag = false;
         for (unsigned int l = 0; l < temp.getSizeX(); l++) {
+            if (l == j) flag = true;
+
             for (unsigned int k = 0; k < temp.getSizeY(); k++) {
                 if (flag) {
                     temp.setVal(k, l, values[k + 1][l + 1]);
                 } else if (j != l) {
                     temp.setVal(k, l, values[k + 1][l]);
-                } else {
-                    flag = true;
-                    temp.setVal(k, l, values[k + 1][l + 1]);
                 };
             };
         };
@@ -199,6 +198,72 @@ float Matrix::getDeterminant() {
 
     return determinant;
 };
+Matrix Matrix::getAdjugate() {
+    // init temp matrix
+    Matrix adjugate(size_y, size_x, 0.0f);
+
+    // size verification
+    if (size_x != size_y) {
+        std::cerr << "tried to calculate a " << size_y << "x" << size_x << " matrx's Adjugate." << std::endl;
+        return adjugate;
+    };
+
+    // calculate adjugate matrix
+    for (unsigned int j = 0; j < size_y; j++) {
+        for (unsigned int i = 0; i < size_x; i++) {
+            Matrix temp(size_y-1, size_x-1, 0.0f);
+            bool flag_j = false;
+
+            for (unsigned int k = 0; k < temp.getSizeY(); k++) {
+                if (k == j) flag_j = true;
+                bool flag_i = false;
+
+                for (unsigned int l = 0; l < temp.getSizeX(); l++) {
+                    if (l == i) flag_i = true;
+
+                    if (flag_j && flag_i) {
+                        temp.setVal(k, l, values[k + 1][l + 1]);
+                    } else if (flag_j && !flag_i) {
+                        temp.setVal(k, l, values[k + 1][l]);
+                    } else if (!flag_j && flag_i) {
+                        temp.setVal(k, l, values[k][l + 1]);
+                    } else {
+                        temp.setVal(k, l, values[k][l]);
+                    };
+
+                };
+            };
+
+            float sign = (j + i) % 2 == 0 ? 1 : -1;
+
+            adjugate.setVal(j, i, sign * temp.getDeterminant());
+        };
+    };
+
+    return adjugate.getTranspose();
+};
+Matrix Matrix::inverse() {
+    Matrix temp(size_y, size_x, 0.0f);
+
+    // size verification
+    if (size_x != size_y) {
+        std::cerr << "tried to inverse a " << size_y << "x" << size_x << " matrx." << std::endl;
+        return temp;
+    };
+
+    // calculate determinant
+    float determinent = this->getDeterminant();
+    if (determinent == 0) {
+        std::cerr << "tried to inverse a non invertibe matrix determinent = 0." << std::endl;
+        return temp;
+    };
+
+    // calculate adjugate matrix
+    temp = this->getAdjugate();
+
+    // retun matrix's inverse
+    return temp.multiplyBy(1/determinent);
+};
 
 //---------------------------------------------
 // addition
@@ -209,7 +274,7 @@ Matrix Matrix::add(Matrix mat) {
     // size verification
     if (size_x != mat.getSizeX() || size_y != mat.getSizeY()) {
         std::cerr << "Error: tried to add a " << size_y << "x" << size_x <<
-        " matrx to a " << mat.getSizeY() << "x" << mat.getSizeX() << " matrix" << std::endl;
+        " matrx to a " << mat.getSizeY() << "x" << mat.getSizeX() << " matrix." << std::endl;
         return temp;
     };
 
@@ -248,7 +313,7 @@ Matrix Matrix::multiplyBy(Matrix mat) {
     // size verification
     if (size_x != mat.getSizeY() || size_y != mat.getSizeX()) {
         std::cerr << "Error: tried to multiply a " << size_y << "x" << size_x <<
-        " matrx by a " << mat.getSizeY() << "x" << mat.getSizeX() << " matrix" << std::endl;
+        " matrx by a " << mat.getSizeY() << "x" << mat.getSizeX() << " matrix." << std::endl;
         return temp;
     };
 

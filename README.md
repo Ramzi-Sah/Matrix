@@ -76,6 +76,16 @@ you can calculate a matrix's determinant like this:
 float determinant = C.getDeterminant();
 ```
 
+you can calculate a matrix's adjugate like this:
+```c++
+Matrix C_Adjugate = C.getAdjugate();
+```
+
+you can calculate a matrix's inverse like this:
+```c++
+Matrix C_inverse = C.inverse();
+```
+
 ### Predefined Matrices
 you can create an identity matrix with size x like this:
 ```c++

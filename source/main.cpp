@@ -50,7 +50,6 @@ int main() {
             C.setVal(j, i, j * C.getSizeY() + i);
 
     C.setVal(0, 0, 1.0f);
-
     std::cout << "C is a "<< C.getSizeY() << "x" << C.getSizeX() << " matrix."<< std::endl;
     std::cout << C.toStr() << std::endl;
 
@@ -72,19 +71,44 @@ int main() {
     std::cout << "C x Matrix(2) is: "<< std::endl;
     std::cout << C.toStr() << std::endl;
 
+    //-------------------------------------------------
     std::cout << "----------------------------------" << std::endl;
-    Matrix D = Matrix::identity(10);
+    Matrix D = Matrix(3, 3);
+    for (unsigned int j = 0; j < C.getSizeY(); j++)
+        for (unsigned int i = 0; i < C.getSizeX(); i++)
+            D.setVal(j, i, j * C.getSizeY() + i);
+
+    D.setVal(0, 0, 1.0f);
     std::cout << "D is a "<< D.getSizeY() << "x" << D.getSizeX() << " matrix."<< std::endl;
     std::cout << D.toStr() << std::endl;
 
-    /*
-    try {
-        C.setVal(44554,64546456, 50);
-        std::cout << C.getVal(44554,64546456) << std::endl;
-    } catch (int e) {
-        std::cout << "flag" << '\n';
-    }
-    */
+    float determinant_D = D.getDeterminant();
+    std::cout << "determinant(D) is: "<< std::endl;
+    std::cout << determinant_D << std::endl << std::endl;
+
+    // adjugate D
+    Matrix adjugate_D = D.getAdjugate();
+    std::cout << "D adjugate is a "<< adjugate_D.getSizeY() << "x" << adjugate_D.getSizeX() << " matrix."<< std::endl;
+    std::cout << adjugate_D.toStr() << std::endl;
+
+    // inverse D
+    Matrix inverse_D = D.inverse();
+    std::cout << "D inverse is a "<< inverse_D.getSizeY() << "x" << inverse_D.getSizeX() << " matrix."<< std::endl;
+    std::cout << inverse_D.toStr() << std::endl;
+
+    // D * inverse D
+    Matrix D_recalculated = inverse_D * D;
+    std::cout << "inv(D) x D is a "<< D_recalculated.getSizeY() << "x" << D_recalculated.getSizeX() << " matrix."<< std::endl;
+    std::cout << D_recalculated.toStr() << std::endl;
+
+    //-------------------------------------------------
+    std::cout << "----------------------------------" << std::endl;
+
+    // 10 by 10 identity matrix
+    Matrix E = Matrix::identity(10);
+    std::cout << "E is a "<< E.getSizeY() << "x" << E.getSizeX() << " matrix."<< std::endl;
+    std::cout << E.toStr() << std::endl;
+
 
     return 0;
 };
